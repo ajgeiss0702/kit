@@ -2,6 +2,7 @@ import { writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as esbuild from 'esbuild';
+import path from 'path';
 
 /** @type {import('.').default} */
 export default function (options) {
@@ -12,9 +13,16 @@ export default function (options) {
 			const dest = builder.getBuildDirectory('cloudflare');
 			const tmp = builder.getBuildDirectory('cloudflare-tmp');
 
+			/** @type {import('./index').AdapterOptions} */
+			const { fallback = '404.html' } = options ?? {};
+
 			builder.rimraf(dest);
 			builder.rimraf(tmp);
 			builder.mkdirp(tmp);
+
+			if (fallback) {
+				await builder.generateFallback(path.join(dest, fallback));
+			}
 
 			const dest_dir = `${dest}${builder.config.kit.paths.base}`;
 			const written_files = builder.writeClient(dest_dir);

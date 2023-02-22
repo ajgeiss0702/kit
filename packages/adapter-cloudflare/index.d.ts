@@ -33,6 +33,12 @@ export interface AdapterOptions {
 		 */
 		exclude?: string[];
 	};
+
+	/**
+	 * The fallback page to generate. (e.g. for excluded routes that 404, or if you run out of worker invocations)
+	 * @default 404.html
+	 */
+	fallback?: string;
 }
 
 export interface RoutesJSONSpec {
